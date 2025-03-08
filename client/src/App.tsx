@@ -1,8 +1,8 @@
 import { useState } from "react";
-import TodoItemList from "./TodoItemList.tsx";
 import { TodoItemTemplate } from "./TodoItemTemplate.tsx";
+import TodoItem from "./TodoItem.tsx";
 
-function App() {
+export default function App() {
   const [todoItems, setTodoItems] = useState<TodoItemTemplate[]>([]);
   const [addingTodo, setAddingTodo] = useState(false);
   const [todoItem, setTodoItem] = useState<TodoItemTemplate>({
@@ -18,16 +18,6 @@ function App() {
   const saveTodo = (todo: TodoItemTemplate) => {
     setTodoItems([...todoItems, todo]);
     setAddingTodo(false);
-  };
-
-  const addTodoItem = () => {
-    const newTodoItem = {
-      id: todoItems.length + 1,
-      text: `Todo item ${todoItems.length + 1}`,
-      completed: false,
-    };
-
-    setTodoItems([...todoItems, newTodoItem]);
   };
 
   return (
@@ -81,7 +71,18 @@ function App() {
                     </button>
                   </div>
                 )
-                : <TodoItemList items={todoItems} />}
+                : (
+                  <div className="list-group">
+                    {todoItems.map((item) => (
+                      <TodoItem
+                        key={item.id}
+                        id={item.id}
+                        text={item.text}
+                        completed={item.completed}
+                      />
+                    ))}
+                  </div>
+                )}
             </div>
           </div>
         </div>
@@ -89,5 +90,3 @@ function App() {
     </>
   );
 }
-
-export default App;

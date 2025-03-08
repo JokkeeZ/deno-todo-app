@@ -2,7 +2,11 @@ import { useState } from "react";
 import { TodoItemTemplate } from "./TodoItemTemplate.tsx";
 
 export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
-  const [item, setItem] = useState<TodoItemTemplate>({ id: id, text: text, completed: completed });
+  const [item, setItem] = useState<TodoItemTemplate>({
+    id: id,
+    text: text,
+    completed: completed,
+  });
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -24,7 +28,14 @@ export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
         <div className="d-flex justify-content-between align-items-center">
           <input className="form-check-input" type="checkbox" checked />
           {isEditing
-            ? <input type="text" className="form-control mx-2" value={item.text} onChange={(e) => handleChange(e)} />
+            ? (
+              <input
+                type="text"
+                className="form-control mx-2"
+                value={item.text}
+                onChange={(e) => handleChange(e)}
+              />
+            )
             : <span className="lead align-text-bottom">{item.text}</span>}
           {isEditing
             ? (
