@@ -1,15 +1,25 @@
 import { Application } from "jsr:@oak/oak/application";
 import { Router } from "jsr:@oak/oak/router";
 import { oakCors } from "@tajpouria/cors";
+import { DatabaseSync } from "node:sqlite";
 import routeStaticFilesFrom from "./util/routeStaticFilesFrom.ts";
 
 export const app = new Application();
 const router = new Router();
 
+const db = new DatabaseSync("todos.db");
+db.exec(`
+  CREATE TABLE IF NOT EXISTS todos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    text TEXT NOT NULL,
+    completed BOOLEAN NOT NULL
+  );
+`);
+
 router.get("/api/todos/:id", (context) => {
 });
 
-router.post("/api/todos/:id", async (context) => {
+router.post("/api/todos/", async (context) => {
 });
 
 router.delete("/api/todos/:id", async (context) => {
