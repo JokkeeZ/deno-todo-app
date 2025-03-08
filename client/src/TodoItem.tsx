@@ -1,22 +1,18 @@
 import { useState } from "react";
+import { TodoItemTemplate } from "./TodoItemTemplate.tsx";
 
-type TodoItem = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
+export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
+  const [item, setItem] = useState<TodoItemTemplate>({ id: id, text: text, completed: completed });
 
-export default function TodoItem({ id, text, completed }: TodoItem) {
   const [isEditing, setIsEditing] = useState(false);
-  // const [newText, setNewText] = useState(text);
 
   const handleEdit = () => {
     setIsEditing(true);
   };
 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setNewText(e.target.value);
-  // };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setItem({ id: id, text: e.target.value, completed: completed });
+  };
 
   const handleSave = () => {
     setIsEditing(false);
@@ -28,8 +24,8 @@ export default function TodoItem({ id, text, completed }: TodoItem) {
         <div className="d-flex justify-content-between align-items-center">
           <input className="form-check-input" type="checkbox" checked />
           {isEditing
-            ? <input type="text" className="form-control mx-2" value={text} />
-            : <span className="lead align-text-bottom">{text}</span>}
+            ? <input type="text" className="form-control mx-2" value={item.text} onChange={(e) => handleChange(e)} />
+            : <span className="lead align-text-bottom">{item.text}</span>}
           {isEditing
             ? (
               <button
