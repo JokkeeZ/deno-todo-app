@@ -3,7 +3,7 @@ import { Router } from "jsr:@oak/oak/router";
 import { oakCors } from "@tajpouria/cors";
 import routeStaticFilesFrom from "./util/routeStaticFilesFrom.ts";
 import { DatabaseSync } from "node:sqlite";
-import { TodoItemTemplate } from "../client/src/TodoItemTemplate.tsx";
+import { Todo } from "../client/src/TodoItem.tsx";
 
 const router = new Router();
 
@@ -23,11 +23,11 @@ router.get("/api/todos", (context) => {
   context.response.body = todos.map((todo: any) => ({
     ...todo,
     completed: todo.completed === "true",
-  })) as TodoItemTemplate[];
+  })) as Todo[];
 });
 
 router.post("/api/todos", async (context) => {
-  const { _id, text, completed } = await context.request.body.json();
+  const { text, completed } = await context.request.body.json();
 
   const { lastInsertRowid, changes } = db
     .prepare("INSERT INTO todos (text, completed) VALUES (?, ?);")
@@ -48,13 +48,14 @@ router.delete("/api/todos/:id", (context) => {
   context.response.body = { success: changes > 0 };
 });
 
-router.put("/api/todos/:id", async (context) => {
-  const { id } = context.params;
-  const { text, completed } = await context.request.body.json();
+router.put("/api/todos", async (context) => {
+  const { id, text, completed } = await context.request.body.json();
 
   const { changes } = db
     .prepare("UPDATE todos SET text = ?, completed = ? WHERE id = ?;")
     .run(text, completed.toString(), id);
+
+  console.log(id, text, completed);
 
   context.response.body = { success: changes > 0 };
 });

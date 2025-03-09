@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { TodoItemTemplate } from "./TodoItemTemplate.tsx";
-import TodoItem from "./TodoItem.tsx";
+import TodoItem, { Todo } from "./TodoItem.tsx";
 
 export default function App() {
-  const [todoItems, setTodoItems] = useState<TodoItemTemplate[]>([]);
+  const [todoItems, setTodoItems] = useState<Todo[]>([]);
   const [addingTodo, setAddingTodo] = useState(false);
-  const [todoItem, setTodoItem] = useState<TodoItemTemplate>({
+  const [todoItem, setTodoItem] = useState<Todo>({
     id: 0,
     text: "",
     completed: false,
@@ -24,7 +23,11 @@ export default function App() {
     setAddingTodo(true);
   };
 
-  const saveTodo = (todo: TodoItemTemplate) => {
+  const removeTodo = (id: number) => {
+    setTodoItems(todoItems.filter((item) => item.id !== id));
+  };
+
+  const createNewTodo = (todo: Todo) => {
     fetch("/api/todos/", {
       method: "POST",
       headers: {
@@ -83,7 +86,7 @@ export default function App() {
                     className="btn btn-primary"
                     type="button"
                     onClick={() =>
-                      saveTodo({
+                      createNewTodo({
                         id: todoItems.length + 1,
                         text: todoItem.text,
                         completed: false,
@@ -98,9 +101,8 @@ export default function App() {
                   {todoItems.map((item) => (
                     <TodoItem
                       key={item.id}
-                      id={item.id}
-                      text={item.text}
-                      completed={item.completed}
+                      todo={item}
+                      onRemove={removeTodo}
                     />
                   ))}
                 </div>
