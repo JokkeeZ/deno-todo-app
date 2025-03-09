@@ -14,6 +14,10 @@ export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
     setIsEditing(true);
   };
 
+  const changeCompleted = () => {
+    setItem({ id: id, text: text, completed: !completed });
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setItem({ id: id, text: e.target.value, completed: completed });
   };
@@ -24,9 +28,9 @@ export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
 
   return (
     <>
-      <div className="list-group-item list-group-item-action flex-column">
+      <div className="list-group-item list-group-item-action flex-column" id={'todo-item-' + item.id}>
         <div className="d-flex justify-content-between align-items-center">
-          <input className="form-check-input" type="checkbox" checked />
+          <input className="form-check-input" type="checkbox" checked={item.completed} onChange={changeCompleted} />
           {isEditing
             ? (
               <input
