@@ -3,6 +3,7 @@ import { Router } from "jsr:@oak/oak/router";
 import { oakCors } from "@tajpouria/cors";
 import routeStaticFilesFrom from "./util/routeStaticFilesFrom.ts";
 import { DatabaseSync } from "node:sqlite";
+import { TodoItemTemplate } from "../client/src/TodoItemTemplate.tsx";
 
 const router = new Router();
 
@@ -17,7 +18,12 @@ db.exec(`
 
 router.get("/api/todos", (context) => {
   const todos = db.prepare("SELECT * FROM todos;").all();
-  context.response.body = todos;
+
+  // deno-lint-ignore no-explicit-any
+  context.response.body = todos.map((todo: any) => ({
+    ...todo,
+    completed: todo.completed === "true",
+  })) as TodoItemTemplate[];
 });
 
 router.post("/api/todos", async (context) => {

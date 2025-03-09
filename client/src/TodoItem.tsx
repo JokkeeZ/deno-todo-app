@@ -10,25 +10,41 @@ export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleEdit = () => {
+  const edit = () => {
     setIsEditing(true);
   };
 
   const changeCompleted = () => {
-    setItem({ id: id, text: text, completed: !completed });
+    setItem({ id: item.id, text: item.text, completed: !item.completed });
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setItem({ id: id, text: e.target.value, completed: completed });
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setItem({ id: item.id, text: e.target.value, completed: item.completed });
   };
 
-  const handleSave = () => {
+  const save = () => {
     setIsEditing(false);
+
+    fetch(`/api/todos/${item.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(item)
+    })
+    .then(response => response.json())
+    .then(response => {
+      if (response.success) {
+        setItem({ id: item.id, text: item.text, completed: item.completed });
+      }
+
+      setIsEditing(false);
+    });
   };
 
   return (
     <>
-      <div className="list-group-item list-group-item-action flex-column" id={'todo-item-' + item.id}>
+      <div className="list-group-item list-group-item-action flex-column">
         <div className="d-flex justify-content-between align-items-center">
           <input className="form-check-input" type="checkbox" checked={item.completed} onChange={changeCompleted} />
           {isEditing
@@ -37,7 +53,7 @@ export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
                 type="text"
                 className="form-control mx-2"
                 value={item.text}
-                onChange={(e) => handleChange(e)}
+                onChange={(e) => onChange(e)}
               />
             )
             : <span className="lead align-text-bottom">{item.text}</span>}
@@ -46,7 +62,7 @@ export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={handleSave}
+                onClick={save}
               >
                 Save
               </button>
@@ -55,7 +71,7 @@ export default function TodoItem({ id, text, completed }: TodoItemTemplate) {
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={handleEdit}
+                onClick={edit}
               >
                 Edit
               </button>

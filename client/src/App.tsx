@@ -11,6 +11,15 @@ export default function App() {
     completed: false,
   });
 
+  useEffect(() => {
+    fetch("/api/todos/")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('fetching');
+        setTodoItems(data);
+      });
+  }, []);
+
   const handleAddTodo = () => {
     setAddingTodo(true);
   };
