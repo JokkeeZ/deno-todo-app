@@ -41,10 +41,17 @@ router.post("/api/todos", async (context) => {
   context.response.body = { success: true, id: lastInsertRowid };
 });
 
-router.delete("/api/todos/:id", (context) => {
+router.delete("/api/todos/delete/:id", (context) => {
   const { id } = context.params;
+  console.log("delete requested for id:", id);
   const { changes } = db.prepare("DELETE FROM todos WHERE id = ?;").run(id);
 
+  context.response.body = { success: changes > 0 };
+});
+
+router.delete("/api/todos/clear", (context) => {
+  console.log('delete all');
+  const { changes } = db.prepare("DELETE FROM todos;").run();
   context.response.body = { success: changes > 0 };
 });
 
@@ -69,7 +76,7 @@ app.use(
   routeStaticFilesFrom([
     `${Deno.cwd()}/client/dist`,
     `${Deno.cwd()}/client/public`,
-  ])
+  ]),
 );
 
 if (import.meta.main) {

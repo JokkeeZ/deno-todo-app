@@ -1,15 +1,16 @@
 import { useState } from "react";
+import { text } from "node:stream/consumers";
 
-export type Todo = {
+export interface Todo {
   id: number;
   text: string;
   completed: boolean;
-};
+}
 
 interface TodoItemProps {
-  todo: Todo,
-  onRemove: (id: number) => void
-};
+  todo: Todo;
+  onRemove: (id: number) => void;
+}
 
 export default function TodoItem({ todo, onRemove }: TodoItemProps) {
   const [item, setItem] = useState<Todo>(todo);
@@ -42,19 +43,19 @@ export default function TodoItem({ todo, onRemove }: TodoItemProps) {
   };
 
   const remove = () => {
-    fetch(`/api/todos/${item.id}`, {
+    fetch(`/api/todos/delete/${item.id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
     })
-    .then((response) => response.json())
-    .then((response) => {
-      if (response.success) {
-        onRemove(item.id);
-        setIsEditing(false);
-      }
-    });
+      .then((response) => response.json())
+      .then((response) => {
+        if (response.success) {
+          onRemove(item.id);
+          setIsEditing(false);
+        }
+      });
   };
 
   const save = () => {
@@ -96,25 +97,29 @@ export default function TodoItem({ todo, onRemove }: TodoItemProps) {
                 onChange={(e) => onTextChange(e)}
               />
             )
-            : <span className="lead align-text-bottom">{item.text}</span>}
+            : <span className={
+              item.completed
+              ? "lead align-text-bottom todo-completed"
+              : "lead align-text-bottom"
+              }>{item.text}</span>}
 
           {isEditing
             ? (
               <div className="d-flex gap-2">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={remove}
-              >
-                Delete
-              </button>
-              <button
-                type="button"
-                className="btn btn-success"
-                onClick={save}
-              >
-                Save
-              </button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={remove}
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={save}
+                >
+                  Save
+                </button>
               </div>
             )
             : (
