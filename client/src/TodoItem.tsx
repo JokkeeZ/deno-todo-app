@@ -97,11 +97,15 @@ export default function TodoItem({ todo, onRemove }: TodoItemProps) {
                 onChange={(e) => onTextChange(e)}
               />
             )
-            : <span className={
-              item.completed
-              ? "lead align-text-bottom todo-completed"
-              : "lead align-text-bottom"
-              }>{item.text}</span>}
+            : (
+              <span
+                className={item.completed
+                  ? "lead align-text-bottom todo-completed"
+                  : "lead align-text-bottom"}
+              >
+                {item.text}
+              </span>
+            )}
 
           {isEditing
             ? (

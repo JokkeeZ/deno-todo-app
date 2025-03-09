@@ -50,7 +50,7 @@ router.delete("/api/todos/delete/:id", (context) => {
 });
 
 router.delete("/api/todos/clear", (context) => {
-  console.log('delete all');
+  console.log("delete all");
   const { changes } = db.prepare("DELETE FROM todos;").run();
   context.response.body = { success: changes > 0 };
 });

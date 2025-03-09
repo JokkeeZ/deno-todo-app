@@ -24,14 +24,14 @@ export default function App() {
   };
 
   const removeAllTodos = () => {
-    fetch('/api/todos/clear', {
-      method: 'DELETE'
+    fetch("/api/todos/clear", {
+      method: "DELETE",
     })
-    .then((response) => response.json())
-    .then((response) => {
-      console.log(response);
-      setTodoItems([]);
-    });
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        setTodoItems([]);
+      });
   };
 
   return (
@@ -51,7 +51,8 @@ export default function App() {
             <button
               type="button"
               className="btn btn-primary mx-1"
-              onClick={removeAllTodos}>
+              onClick={removeAllTodos}
+            >
               Remove all todos
             </button>
           </div>
