@@ -43,26 +43,21 @@ router.post("/api/todos", async (context) => {
 
 router.delete("/api/todos/delete/:id", (context) => {
   const { id } = context.params;
-  console.log("delete requested for id:", id);
   const { changes } = db.prepare("DELETE FROM todos WHERE id = ?;").run(id);
 
   context.response.body = { success: changes > 0 };
 });
 
 router.delete("/api/todos/clear", (context) => {
-  console.log("delete all");
   const { changes } = db.prepare("DELETE FROM todos;").run();
   context.response.body = { success: changes > 0 };
 });
 
 router.put("/api/todos", async (context) => {
   const { id, text, completed } = await context.request.body.json();
-
   const { changes } = db
     .prepare("UPDATE todos SET text = ?, completed = ? WHERE id = ?;")
     .run(text, completed.toString(), id);
-
-  console.log(id, text, completed);
 
   context.response.body = { success: changes > 0 };
 });

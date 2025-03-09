@@ -28,8 +28,7 @@ export default function App() {
       method: "DELETE",
     })
       .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
+      .then((_response) => {
         setTodoItems([]);
       });
   };
